@@ -19,6 +19,6 @@ def periodo_orbital(Perigeu):
     :return Orbital Period
     """
     import numpy as np
-    mu = 398600
+    mu = 398600.0
     T_orb = float(((2 * np.pi) / (np.sqrt(mu))) * (Perigeu ** (3 / 2)))
     return (T_orb)

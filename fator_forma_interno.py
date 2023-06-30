@@ -25,7 +25,7 @@ def fator_perpendicular(X, Y, Z):
                                     ((h**2*(1 + h**2 + w**2))/((1 + h**2)*(h**2 + w**2)))**(h**2)))
     return Fij
 
-print(fator_perpendicular(0.1,0.1,0.1))
+
 
 
 

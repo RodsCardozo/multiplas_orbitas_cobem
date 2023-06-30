@@ -16,7 +16,7 @@
 def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan, argumento_perigeu: float,
                        anomalia_verdadeira: float, inclinacao: float, num_orbitas: int, delt: float, psi: float,
                        teta: float, phi: float, psip: float, tetap: float, phip: float, massa: float, largura: float,
-                       comprimento: float, altura: float,N):
+                       comprimento: float, altura: float,N, beta):
 
     """
     :param data = inicio da simulacao
@@ -56,7 +56,7 @@ def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan,
                 os.makedirs(directory)
         except OSError:
             print('Error: Creating directory. ' + directory)
-    createFolder(f'./results_{N}/propagador_orbital_{N}')
+    createFolder(f'beta{beta}/analise_{inclinacao}/results_{N}/propagador_orbital_{N}')
     def propagador(q: list, t: float, rho: float, velocidade: float, massa: float, largura: float, comprimento: float,
                    altura: float, CD: float, posicao: float, Area_transversal: float):  # funcao para integrar
         import numpy as np
@@ -418,9 +418,9 @@ def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan,
     '''    df['r'] = np.sqrt((df['X_ECI'] ** 2 + df['Y_ECI'] ** 2 + df['Z_ECI'] ** 2))
     df['end'] = 'end'''
     import os.path
-    df.to_csv(os.path.join(f'./results_{N}/propagador_orbital_{N}', f'dados_ECI_{N}.csv'), sep=',')
+    df.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{N}/propagador_orbital_{N}', f'dados_ECI_{N}.csv'), sep=',')
 
-    solucao.to_csv(os.path.join(f'./results_{N}/propagador_orbital_{N}', f'solver_{N}.csv'), sep=',')
+    solucao.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{N}/propagador_orbital_{N}', f'solver_{N}.csv'), sep=',')
     r = pd.DataFrame(r, columns=['rx', 'ry', 'rz'])
 
     r['latitude'] = np.degrees(-np.arcsin(r['rz'] / (r['rx']**2 + r['ry']**2 + r['rz']**2)**0.5))
@@ -429,7 +429,7 @@ def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan,
     r['vel'] = v
     r['vel_anali'] = np.sqrt(((mu/h0) * (1 + excentricidade*np.cos(solucao['anomalia_verdadeira'])))**2 + ((mu/h0) * excentricidade*np.sin(solucao['anomalia_verdadeira'])))
     r['end'] = 'end'
-    r.to_csv(os.path.join(f'./results_{N}/propagador_orbital_{N}', f'ECEF_R_{N}.csv'), sep=',')
+    r.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{N}/propagador_orbital_{N}', f'ECEF_R_{N}.csv'), sep=',')
 
     return df
 

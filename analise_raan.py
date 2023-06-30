@@ -11,6 +11,7 @@
     Data = 05/04/2023
 
 """
+import pandas as pd
 
 
 def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan: float, argumento_perigeu: float,
@@ -73,7 +74,7 @@ def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan:
         # Equacoes diferenciais ordinarias
         dMdt = [r*((-1/(2*r))*h*rho*velocidade*((CD*Area_transversal)/m) - 1.5 * ((J2*mu*R_terra**2)/r**4) * np.sin(inc)**2*np.sin(2*(arg_per + anomalia_verdadeira))),
 
-                (h/mu)*np.sin(anomalia_verdadeira)*((-1/(2*h))*mu*ecc*rho*velocidade*((CD*Area_transversal)/m)*np.sin(anomalia_verdadeira)
+                (h/mu)*np.sin(anomalia_verdadeira) * ((-1/(2*h))*mu*ecc*rho*velocidade*((CD*Area_transversal)/m)*np.sin(anomalia_verdadeira)
                 - 1.5*((J2*mu*R_terra**2)/r**4)*(1 - 3*np.sin(inc)**2*np.sin(arg_per + anomalia_verdadeira)**2))
                 + (((-1/(2*r))*h*rho*velocidade*((CD*Area_transversal)/m) - 1.5*((J2*mu*R_terra**2)/r**4)*np.sin(inc)**2*np.sin(2*(arg_per
                 + anomalia_verdadeira)))/(mu*h))*((h**2 + mu*r)*np.cos(anomalia_verdadeira) + mu*ecc*r),
@@ -110,7 +111,7 @@ def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan:
 
     # condicoes iniciais
 
-    SMA = float(semi_eixo)  # semi eixo maior
+    SMA = float(np.sqrt(semi_eixo**2))  # semi eixo maior
     ecc0 = float(excentricidade)  # ecentricidade da orbita
     raan0 = np.radians(float(raan))  # ascencao direita do nodo ascendente
     arg_per0 = np.radians(float(argumento_perigeu))  # argumento do perigeu
@@ -200,7 +201,7 @@ def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan:
         longitude = long[-1]
         posicao = (h0**2/mu)*(1/(1-ecc0*np.cos(true_anomaly0)))
         air_density = densidade(ini_date, altitude, latitude, longitude)
-        velocidade = (mu/h0)*np.sqrt(np.sin(true_anomaly0)**2 + (ecc0 + np.cos(true_anomaly0))**2)*1000.0
+        velocidade = (mu/h0)*np.sqrt(np.sin(true_anomaly0)**2 + (ecc0 + np.cos(true_anomaly0))**2)*1000
         massa = massa
         CD = 2.2
         Area_transversal = 0.1*0.1
@@ -277,13 +278,13 @@ def propagador_orbital(data: str, semi_eixo: float, excentricidade: float, raan:
         lat.append(np.degrees(latitude))
         long.append(np.degrees(longitude))
     df1 = pd.DataFrame(data, columns=['data'])
-    print(data)
+
     from vetor_solar import beta_angle
     df = pd.DataFrame(solution, columns=['h', 'ecc', 'anomalia_verdadeira', 'raan', 'inc', 'arg_per'])
 
     df = pd.concat([df,df1], axis=1)
-    print(df)
-    df.to_csv(f'./analise_raan2/raan_mes_{N}/analise_beta_mes_{N}.csv')
+
+    df.to_csv(f'./analise_raan2/analise_beta_mes_{N}.csv', index=False)
     return
 
 
@@ -292,59 +293,81 @@ import os, sys
 #dia = '01/01/2023 12:00:00'
 data = datetime.strptime('01/01/2023 12:00:00', '%m/%d/%Y %H:%M:%S')
 # data = [data + timedelta(days=x) for x in range(0,365,30)]
-semi_eixo = 6871.0
+semi_eixo = 6700.0
 ecc = 0.0002
 raan = 0.0
 argumento_perigeu = 0.0
 anomalia_verdadeira = 0.0
 inclinacao = 98.0
-num_orbitas = 1
+num_orbitas = 500.0
 delt = 10
 massa = 3.0
 largura = 0.1
 comprimento = 0.1
 altura = 0.3
 mu = 398600.0
+from vetor_solar import beta_angle
+from numpy import pi
+propagador_orbital(data, semi_eixo, ecc, raan, argumento_perigeu, anomalia_verdadeira, inclinacao, num_orbitas,
+                   delt, massa, largura, comprimento, altura, 1)
 
-for i in range(0, 12):
-    def createFolder(directory):
-        try:
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-        except OSError:
-            print('Error: Creating directory. ' + directory)
-    # cria o folder para cada caso
-    createFolder(f'./analise_raan2/raan_mes_{i}/')
+'''df = pd.read_csv(f'./analise_raan2/analise_beta_mes_1.csv', sep = ',')
+dias = list(df['data'])
+raans = list(df['raan'])
+beta = []
+for i in range(0, len(dias)):
+    data = dias[i]
+    data = data = datetime.strptime(data, '%Y-%m-%d %H:%M:%S')
+    beta.append(beta_angle(dias[i], inclinacao, raans[i])*(180/pi))
 
-    propagador_orbital(data, semi_eixo, ecc, raan, argumento_perigeu, anomalia_verdadeira, inclinacao, num_orbitas,
-                       delt, massa, largura, comprimento, altura, i)
-    import pandas as pd
-    from vetor_solar import beta_angle
-    df = pd.read_csv(f'./analise_raan2/raan_mes_{i}/analise_beta_mes_{i}.csv', sep=',')
+df['beta'] = beta
+df.to_csv(f'./analise_raan2/analise_beta_mes_{2}.csv', index=False)'''
+import numpy as np
+df = pd.read_csv('analise_raan2/analise_beta_mes_1.csv', sep=',')
+print(df)
+import plotly.graph_objects as go
+import plotly.io as pio
 
-    # 'h', 'ecc', 'anomalia_verdadeira', 'raan', 'inc', 'arg_per'
+df['X_perifocal'] = (df['h'] ** 2 / mu) * (
+            1 / (1 + df['ecc'] * np.cos(df['anomalia_verdadeira']))) * np.cos(df['anomalia_verdadeira'])
+df['Y_perifocal'] = (df['h'] ** 2 / mu) * (
+            1 / (1 + df['ecc'] * np.cos(df['anomalia_verdadeira']))) * np.sin(df['anomalia_verdadeira'])
+df['Z_perifocal'] = 0
+df['distancia'] = np.sqrt(df['X_perifocal'] ** 2 + df['Y_perifocal'] ** 2)
+df['X_ECI'] = ((np.cos(df['raan']) * np.cos(df['arg_per']) - np.sin(df['raan']) * np.sin(
+    df['arg_per']) * np.cos(df['inc'])) * df['X_perifocal']
 
-    semi_eixo = df['h'].loc[df.index[-1]]**2/mu * (1 / (1 + df['ecc'].loc[df.index[-1]] * df['anomalia_verdadeira'].loc[df.index[-1]]))
-    ecc = df['ecc'].loc[df.index[-1]]
-    raan = df['raan'].loc[df.index[-1]]
-    argumento_perigeu = df['arg_per'].loc[df.index[-1]]
-    anomalia_verdadeira = df['anomalia_verdadeira'].loc[df.index[-1]]
-    inclinacao = df['inc'].loc[df.index[-1]]
-    data = df['data'].loc[df.index[-1]]
+               + (-np.cos(df['raan']) * np.sin(df['arg_per']) - np.sin(df['raan']) * np.cos(
+            df['inc']) * np.cos(df['arg_per'])) * df['Y_perifocal']
 
-    from numpy import pi
-    data1 = list(df['data'])
-    print(data1)
-    inclinacao1 = list(df['inc'])
-    Raan = list(df['raan'])
-    beta = []
-    for i in range(0, len(data1)):
-        data = data1[i]
-        dia = datetime.strptime(data, '%y-%d-%m %H:%M:%S')
-        beta.append(beta_angle(dia, inclinacao1[i], Raan[i]))
-    df['beta'] = beta
+               + np.sin(df['raan']) * np.sin(df['inc']) * df['Z_perifocal'])
 
-    import plotly.io as pio
-    import plotly.express as px
-    linhas = px.line(df, y=['beta'])
-    pio.write_image(linhas, f'./analise_raan2/raan_mes_{i}/beta_mes_{i}.png')
+df['Y_ECI'] = ((np.sin(df['raan']) * np.cos(df['arg_per']) + np.cos(df['raan']) * np.cos(
+    df['inc']) * np.sin(df['arg_per'])) * df['X_perifocal']
+
+               + (-np.sin(df['raan']) * np.sin(df['arg_per']) + np.cos(df['raan']) * np.cos(
+            df['inc']) * np.cos(df['arg_per'])) * df['Y_perifocal']
+
+               - np.cos(df['raan']) * np.sin(df['inc']) * df['Z_perifocal'])
+
+df['Z_ECI'] = (np.sin(df['inc']) * np.sin(df['arg_per']) * df['X_perifocal']
+               + np.sin(df['inc']) * np.cos(df['arg_per']) * df['Y_perifocal']
+               + np.cos(df['inc']) * df['Z_perifocal'])
+df['R'] = (df['X_ECI']**2 + df['Y_ECI']**2 + df['Z_ECI']**2)**(0.5)
+df['fim'] = 0
+fig = go.Figure()
+fig.add_trace(go.Scatter(y=df['R'], mode='lines'))
+
+# Atualização do layout com as configurações de legenda
+fig.update_layout(
+    xaxis=dict(
+        tickmode='array',
+        title='Tempo'
+    ),
+    yaxis=dict(title='Valores'),
+    title='Análise Anual',
+    showlegend=True
+)
+df.to_csv(f'./analise_raan2/analise_beta_mes_{3}.csv', index=False)
+# Exibição do gráfico
+fig.show()

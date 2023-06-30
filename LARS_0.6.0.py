@@ -63,9 +63,11 @@ num_orbita = int(df.iloc[9, 0])  # numero de obitas
 rp = SMA * (1 - ecc)
 T_orbita = periodo_orbital(SMA)
 
+from vetor_solar import taxa_precessao
 PSIP = float(df.iloc[11, 0])
 TETAP = float(df.iloc[12, 0])
-PHIP = (2*np.pi)/T_orbita
+PHIP = (2*np.pi)/T_orbita #
+
 psi0 = float(df.iloc[14, 0])
 teta0 = float(df.iloc[15, 0])
 phi0 = float(df.iloc[16, 0])
@@ -95,7 +97,7 @@ Propagacao_orbital = propagador_orbital(data, SMA, ecc, Raan, arg_per, true_anom
                                         phi0, PSIP, TETAP, PHIP, massa, largura, comprimento, altura, 1)
 
 # simulacao radiacao
-calor_total = calor_incidente(Propagacao_orbital, Is, Ir, e, ai, gama, data, 1)
+calor_total = calor_incidente(Propagacao_orbital, Is, Ir, e, ai, gama, data, 1, inc)
 
 fim = datetime.now()
 var = fim - inicio
@@ -147,12 +149,12 @@ print(
         f'Numero de Orbitas simuladas: {num_orbita}'
 )
 
-plot_calor_sol = plots.calor_solar(calor_total, 2)
-plot_calor_Terra = plots.calor_IR_Terra(calor_total, 2)
-plot_calor_albedo = plots.calor_albedo(calor_total, 2)
-plot_calor_total = plots.calor_total(calor_total,2)
+plot_calor_sol = plots.calor_solar(calor_total, 1)
+plot_calor_Terra = plots.calor_IR_Terra(calor_total, 1)
+plot_calor_albedo = plots.calor_albedo(calor_total, 1)
+plot_calor_total = plots.calor_total(calor_total,1)
 size = SMA*1.1
-'''plot_animacao = plots.plot_animacao_orbita(Propagacao_orbital, size)'''
+#plot_animacao = plots.plot_animacao_orbita(Propagacao_orbital, size)
 
 
 '''from bot_simulacao import bot_orbital

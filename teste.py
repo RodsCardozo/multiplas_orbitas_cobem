@@ -298,3 +298,32 @@ abas.pack()
 
 # Inicie o loop principal da interface gráfica
 janela.mainloop()'''
+import plotly.graph_objects as go
+
+# Dados de exemplo
+x = [100 * i for i in range(1, 13)]  # Valores de x a cada 100 segundos
+y = [i for i in range(1, 13)]  # Valores de y
+
+# Configuração das datas
+tickvals = [100 * i for i in range(1, 13)]  # Posições dos ticks no eixo-x
+ticktext = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']  # Texto dos ticks no eixo-x
+
+# Criação do gráfico
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=x, y=y, mode='lines'))
+
+# Atualização do layout com as configurações de legenda
+fig.update_layout(
+    xaxis=dict(
+        tickmode='array',
+        tickvals=tickvals,
+        ticktext=ticktext,
+        title='Tempo'
+    ),
+    yaxis=dict(title='Valores'),
+    title='Análise Anual',
+    showlegend=True
+)
+
+# Exibição do gráfico
+fig.show()

@@ -1,5 +1,4 @@
 #plots.py>
-
 # plotagens orbitais #
 def plot_animacao_orbita(dataframe, size):
     import plotly.express as px
@@ -52,7 +51,6 @@ def plot_animacao_orbita(dataframe, size):
     fig.show()
     pio.write_image(fig, 'imagens_resultado/animacao_3d.png')
     return
-
 def plot_groundtrack_3D(dataframe, plot):
     import plotly.graph_objects as go
     import plotly.io as pio
@@ -114,7 +112,6 @@ def plot_groundtrack_3D(dataframe, plot):
     elif plot == 2:
         pass
     return
-
 def plot_groundtrack_2D(dataframe, plot):
     import plotly.io as pio
     import plotly.graph_objects as go
@@ -263,32 +260,60 @@ def calor_solar(dataframe, plot):
     Q_sol = dataframe
     linhas = px.line(Q_sol, y=['Solar 1', 'Solar 2', 'Solar 3', 'Solar 4', 'Solar 5', 'Solar 6'])
 
-    linhas.update_layout(title=dict(font=dict(color = 'black'),
-                                    text = 'Radiação Solar',
-                                    x = 0.5),
-                         showlegend = True,
-                         legend = dict(bgcolor = 'rgb(228, 232, 255)',
-                                       bordercolor = 'rgb(0, 0, 0)',
-                                       borderwidth = 1.0,
-                                       itemdoubleclick = "toggleothers",
-                                       title_text = 'Face'
-                                       ),
+    linhas.update_layout(showlegend=True,
+                         legend=dict(bgcolor='rgb(250, 250, 250)',
+                                     bordercolor='rgb(120, 120, 120)',
+                                     borderwidth=1.0,
+                                     itemdoubleclick="toggleothers",
+                                     title_text='Face'
+                                     ),
                          xaxis=dict(
                              showgrid=True,
-                             gridcolor='rgb(255, 255, 255)',
+                             gridcolor='rgba(100, 100, 100, 0.3)',
                              gridwidth=1,
-                             dtick=len(Q_sol)*0.1
+                             dtick=1000,
+                     griddash='dot'
                          ),
                          yaxis=dict(
                              showgrid=True,
-                             gridcolor='rgb(255, 255, 255)',
+                             gridcolor='rgba(100, 100, 100, 0.3)',
                              gridwidth=1,
-                             dtick=100
+                             dtick=150,
+                     griddash='dot'
                          ),
                          autosize=True,
-                         plot_bgcolor = 'rgb(228, 232, 255)',
-                      xaxis_title='Posição Orbital',
-                      yaxis_title='Radiação [W/m^2]')
+                         plot_bgcolor='rgb(255, 255, 255)',
+                         xaxis_title='Time [s]',
+                         yaxis_title='Radiation [W/m^2]')
+    linhas.update_layout(
+        plot_bgcolor='white',  # Cor de fundo do gráfico
+        paper_bgcolor='white',  # Cor de fundo do papel
+        xaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+        ),
+        yaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+        ),
+    )
+    linhas.update_layout(
+        xaxis=dict(
+            showline=True,  # Exibir borda do eixo x
+            mirror=True,  # Refletir a linha de grade na borda do eixo x
+        ),
+        yaxis=dict(
+            showline=True,  # Exibir borda do eixo y
+            mirror=True,  # Refletir a linha de grade na borda do eixo y
+        ),
+    )
+
+    linhas.update_layout(
+        xaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo x
+        ),
+        yaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo y
+        ),
+    )
     if plot == 1:
         linhas.show()
     elif plot == 2:
@@ -301,32 +326,59 @@ def calor_albedo(dataframe,plot):
     import plotly.io as pio
     Q_alb = dataframe
     linhas = px.line(Q_alb, y=['Albedo 1', 'Albedo 2', 'Albedo 3', 'Albedo 4', 'Albedo 5', 'Albedo 6'])
-    linhas.update_layout(title=dict(font=dict(color = 'black'),
-                                    text = 'Radiação de Albedo',
-                                    x = 0.5),
-                         showlegend = True,
-                         legend = dict(bgcolor = 'rgb(228, 232, 255)',
-                                       bordercolor = 'rgb(0, 0, 0)',
-                                       borderwidth = 1.0,
-                                       itemdoubleclick = "toggleothers",
-                                       title_text = 'Face'
-                                       ),
+    linhas.update_layout(showlegend=True,
+                         legend=dict(bgcolor='rgb(250, 250, 250)',
+                                     bordercolor='rgb(120, 120, 120)',
+                                     borderwidth=1.0,
+                                     itemdoubleclick="toggleothers",
+                                     title_text='Face'
+                                     ),
                          xaxis=dict(
                              showgrid=True,
-                             gridcolor='rgb(255, 255, 255)',
+                             gridcolor='rgba(100, 100, 100, 0.3)',
                              gridwidth=1,
-                             dtick=100
+                             dtick=1000,
+                     griddash='dot'
                          ),
                          yaxis=dict(
                              showgrid=True,
-                             gridcolor='rgb(255, 255, 255)',
+                             gridcolor='rgba(100, 100, 100, 0.3)',
                              gridwidth=1,
-                             dtick=100
+                     griddash='dot'
                          ),
                          autosize=True,
-                         plot_bgcolor = 'rgb(228, 232, 255)',
-                      xaxis_title='Posição Orbital',
-                      yaxis_title='Radiação [W/m^2]')
+                         plot_bgcolor='rgb(255, 255, 255)',
+                         xaxis_title='Time [s]',
+                         yaxis_title='Radiation [W/m^2]')
+    linhas.update_layout(
+        plot_bgcolor='white',  # Cor de fundo do gráfico
+        paper_bgcolor='white',  # Cor de fundo do papel
+        xaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+        ),
+        yaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+        ),
+    )
+    linhas.update_layout(
+        xaxis=dict(
+            showline=True,  # Exibir borda do eixo x
+            mirror=True,  # Refletir a linha de grade na borda do eixo x
+        ),
+        yaxis=dict(
+            showline=True,  # Exibir borda do eixo y
+            mirror=True,  # Refletir a linha de grade na borda do eixo y
+        ),
+    )
+
+    linhas.update_layout(
+        xaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo x
+        ),
+        yaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo y
+        ),
+    )
     if plot == 1:
         linhas.show()
     elif plot == 2:
@@ -339,32 +391,60 @@ def calor_IR_Terra(dataframe,plot):
     import plotly.express as px
     Q_ir = dataframe
     linhas = px.line(Q_ir, y = ['IR Terra 1', 'IR Terra 2', 'IR Terra 3', 'IR Terra 4', 'IR Terra 5', 'IR Terra 6'])
-    linhas.update_layout(title=dict(font=dict(color = 'black'),
-                                    text = 'Radiação IR Terra',
-                                    x = 0.5),
-                         showlegend = True,
-                         legend = dict(bgcolor = 'rgb(228, 232, 255)',
-                                       bordercolor = 'rgb(0, 0, 0)',
-                                       borderwidth = 1.0,
-                                       itemdoubleclick = "toggleothers",
-                                       title_text = 'Face'
-                                       ),
+    linhas.update_layout(showlegend=True,
+                         legend=dict(bgcolor='rgb(250, 250, 250)',
+                                     bordercolor='rgb(120, 120, 120)',
+                                     borderwidth=1.0,
+                                     itemdoubleclick="toggleothers",
+                                     title_text='Face'
+                                     ),
                          xaxis=dict(
                              showgrid=True,
-                             gridcolor='rgb(255, 255, 255)',
+                             gridcolor='rgba(100, 100, 100, 0.3)',
                              gridwidth=1,
-                             dtick=100
+                             dtick=1000,
+                     griddash='dot'
                          ),
                          yaxis=dict(
                              showgrid=True,
-                             gridcolor='rgb(255, 255, 255)',
+                             gridcolor='rgba(100, 100, 100, 0.3)',
                              gridwidth=1,
-                             dtick=100
+                             dtick=50,
+                     griddash='dot'
                          ),
                          autosize=True,
-                         plot_bgcolor = 'rgb(228, 232, 255)',
-                      xaxis_title='Posição Orbital',
-                      yaxis_title='Radiação [W/m^2]')
+                         plot_bgcolor='rgb(255, 255, 255)',
+                         xaxis_title='Time [s]',
+                         yaxis_title='Radiation [W/m^2]')
+    linhas.update_layout(
+        plot_bgcolor='white',  # Cor de fundo do gráfico
+        paper_bgcolor='white',  # Cor de fundo do papel
+        xaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+        ),
+        yaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+        ),
+    )
+    linhas.update_layout(
+        xaxis=dict(
+            showline=True,  # Exibir borda do eixo x
+            mirror=True,  # Refletir a linha de grade na borda do eixo x
+        ),
+        yaxis=dict(
+            showline=True,  # Exibir borda do eixo y
+            mirror=True,  # Refletir a linha de grade na borda do eixo y
+        ),
+    )
+
+    linhas.update_layout(
+        xaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo x
+        ),
+        yaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo y
+        ),
+    )
     if plot == 1:
         linhas.show()
     elif plot == 2:
@@ -377,35 +457,129 @@ def calor_total(dataframe, plot):
     import plotly.express as px
     Q_total = dataframe
     linhas = px.line(Q_total, y=['Total 1', 'Total 2', 'Total 3', 'Total 4', 'Total 5', 'Total 6'])
-    linhas.update_layout(title=dict(font=dict(color = 'black'),
-                                    text = 'Radiação Total em Cada Face',
-                                    x = 0.5),
-                         showlegend = True,
-                         legend = dict(bgcolor = 'rgb(228, 232, 255)',
-                                       bordercolor = 'rgb(0, 0, 0)',
-                                       borderwidth = 1.0,
-                                       itemdoubleclick = "toggleothers",
-                                       title_text = 'Face'
-                                       ),
+    linhas.update_layout(showlegend=True,
+                         legend=dict(bgcolor='rgb(250, 250, 250)',
+                                     bordercolor='rgb(120, 120, 120)',
+                                     borderwidth=1.0,
+                                     itemdoubleclick="toggleothers",
+                                     title_text='Face'
+                                     ),
                          xaxis=dict(
                              showgrid=True,
-                             gridcolor='rgb(255, 255, 255)',
+                             gridcolor='rgba(100, 100, 100, 0.3)',
                              gridwidth=1,
-                             dtick=100
+                             dtick=1000,
+                     griddash='dot'
                          ),
                          yaxis=dict(
                              showgrid=True,
-                             gridcolor='rgb(255, 255, 255)',
+                             gridcolor='rgba(100, 100, 100, 0.3)',
                              gridwidth=1,
-                             dtick=100
+                             dtick=150,
+                     griddash='dot'
                          ),
                          autosize=True,
-                         plot_bgcolor = 'rgb(228, 232, 255)',
-                      xaxis_title='Posição Orbital',
-                      yaxis_title='Radiação [W/m^2]')
+                         plot_bgcolor='rgb(255, 255, 255)',
+                         xaxis_title='Time [s]',
+                         yaxis_title='Radiation [W/m^2]')
+    linhas.update_layout(
+        plot_bgcolor='white',  # Cor de fundo do gráfico
+        paper_bgcolor='white',  # Cor de fundo do papel
+        xaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+        ),
+        yaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+        ),
+    )
+    linhas.update_layout(
+        xaxis=dict(
+            showline=True,  # Exibir borda do eixo x
+            mirror=True,  # Refletir a linha de grade na borda do eixo x
+        ),
+        yaxis=dict(
+            showline=True,  # Exibir borda do eixo y
+            mirror=True,  # Refletir a linha de grade na borda do eixo y
+        ),
+    )
+
+    linhas.update_layout(
+        xaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo x
+        ),
+        yaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo y
+        ),
+    )
     if plot == 1:
         linhas.show()
     elif plot == 2:
         pass
     #pio.write_image(linhas, 'imagens_resultado/radiacao_total.png')
+    return linhas
+
+def soma_radiaco(dataframe, plot):
+    import plotly.io as pio
+    import plotly.express as px
+    Q_total = dataframe
+    Q_total['Nadir'] = Q_total['Total 1'] + Q_total['Total 2'] + Q_total['Total 3'] + Q_total['Total 4'] + Q_total['Total 5'] + Q_total['Total 6']
+    y_dtick = int((-Q_total['Nadir'].min()+Q_total['Nadir'].max())/5)
+    linhas = px.line(Q_total, y=['Nadir'])
+    linhas.update_layout(showlegend=True,
+                         legend=dict(bgcolor='rgb(250, 250, 250)',
+                                     bordercolor='rgb(120, 120, 120)',
+                                     borderwidth=1.0,
+                                     itemdoubleclick="toggleothers",
+                                     title_text='Attitude'
+                                     ),
+                         xaxis=dict(
+                             showgrid=True,
+                             gridcolor='rgba(100, 100, 100, 0.3)',
+                             gridwidth=1,
+                             dtick=1000,
+                             griddash='dot'
+                         ),
+                         yaxis=dict(
+                             showgrid=True,
+                             gridcolor='rgba(100, 100, 100, 0.3)',
+                             gridwidth=1,
+                             griddash='dot'
+                         ),
+                         autosize=True,
+                         plot_bgcolor='rgb(255, 255, 255)',
+                         xaxis_title='Time [s]',
+                         yaxis_title='Radiation [W/m^2]')
+    linhas.update_layout(
+        plot_bgcolor='white',  # Cor de fundo do gráfico
+        paper_bgcolor='white',  # Cor de fundo do papel
+        xaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+        ),
+        yaxis=dict(
+            linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+        ),
+    )
+    linhas.update_layout(
+        xaxis=dict(
+            showline=True,  # Exibir borda do eixo x
+            mirror=True,  # Refletir a linha de grade na borda do eixo x
+        ),
+        yaxis=dict(
+            showline=True,  # Exibir borda do eixo y
+            mirror=True,  # Refletir a linha de grade na borda do eixo y
+        ),
+    )
+
+    linhas.update_layout(
+        xaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo x
+        ),
+        yaxis=dict(
+            linewidth=2,  # Espessura da borda do eixo y
+        ),
+    )
+    if plot == 1:
+        linhas.show()
+    elif plot == 2:
+        pass
     return linhas

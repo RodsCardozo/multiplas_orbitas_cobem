@@ -4,7 +4,7 @@ import os,sys
 from datetime import datetime, timedelta
 from periodo_orbital import periodo_orbital
 import numpy as np
-from plots import calor_total,calor_solar,calor_albedo,calor_IR_Terra
+from plots import calor_total,calor_solar,calor_albedo,calor_IR_Terra, soma_radiaco
 def beta_mes(inicio, inc):
     """
     :param inicio: Data de inicio para beta mensal
@@ -30,8 +30,17 @@ def beta_mes(inicio, inc):
     fig.show()
     return raan, df, data
 
-raan, df, data = beta_mes('01/01/2023 12:00:00', 51.0)
-
+#raan, df, data = beta_mes('01/01/2023 12:00:00', 51.0)
+'''raan1 = beta_raan(0.0, '01/01/2015 00:00:00', 51.0)
+raan2 = beta_raan(72.0, '06/02/2015 00:00:00', 51.0)'''
+inclinacao = 51.63
+beta = [0.0, 72.0]
+raan1 = float(beta_raan(0.0, '01/10/2015 00:00:00', inclinacao)*(180/np.pi))
+raan2 = float(beta_raan(72.0, '06/14/2015 00:00:00', inclinacao)*(180/np.pi))
+raan = [raan1, raan2]
+print(raan)
+Data = ['01/01/2015 00:00:00', '06/14/2015 00:00:00']
+print(type(Data[1]))
 from propagador_orbital import propagador_orbital as po
 from radiacao_incidente import calor_incidente as ci
 from tqdm import tqdm
@@ -53,10 +62,10 @@ for i in tqdm(range(0, len(raan))):
         ecc = 0.002
     else:
         ecc = a
-    Raan = raan #float(df.iloc[2, 0])  # ascencao direita do nodo ascendente
+    Raan = raan[i] #float(df.iloc[2, 0])  # ascencao direita do nodo ascendente
     arg_per = (float(df.iloc[3, 0]))  # argumento do perigeu
     true_anomaly = (float(df.iloc[4, 0]))  # anomalia verdadeira
-    b = (float(df.iloc[5, 0]))  # inclinacao
+    b = inclinacao #(float(df.iloc[5, 0]))  # inclinacao
     if b < 0.01:
         inc = 0.1
     else:
@@ -71,11 +80,11 @@ for i in tqdm(range(0, len(raan))):
     PSIP = float(df.iloc[11, 0])
     TETAP = float(df.iloc[12, 0])
     PHIP = (2 * np.pi) / T_orbita
-    phi0 = Raan[i]#float(df.iloc[14, 0])
-    teta0 = inc#float(df.iloc[15, 0])
+    phi0 = raan[i] #float(df.iloc[14, 0])
+    teta0 = inc #float(df.iloc[15, 0])
     psi0 = true_anomaly #float(df.iloc[16, 0])
-    input_string = df.iloc[18, 0]
-    data = data #datetime.strptime(input_string, " %m/%d/%Y %H:%M:%S")
+    input_string = Data[i] # df.iloc[18, 0]
+    data = datetime.strptime(input_string, "%m/%d/%Y %H:%M:%S")
     delt = float(df.iloc[19, 0])
 
     massa = float(df.iloc[21, 0])  # massa do cubesat
@@ -98,14 +107,14 @@ for i in tqdm(range(0, len(raan))):
         except OSError:
             print('Error: Creating directory. ' + directory)
     # cria o folder para cada caso
-    createFolder(f'analise_{inc}/results_{i}/')
-    createFolder(f'analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}')
+    createFolder(f'beta{beta[i]}/analise_{inc}/results_{i}/')
+    createFolder(f'beta{beta[i]}/analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}')
     inicio = datetime.now()
 
-    orbita = po(data[i], SMA, ecc, Raan[i], arg_per, true_anomaly, inc, num_orbita, delt, psi0, teta0,
-                                        phi0, PSIP, TETAP, PHIP, massa, largura, comprimento, altura, i)
+    orbita = po(data, SMA, ecc, Raan, arg_per, true_anomaly, inc, num_orbita, delt, psi0, teta0,
+                                        phi0, PSIP, TETAP, PHIP, massa, largura, comprimento, altura, i, beta[i])
 
-    radiacao = ci(orbita, Is, Ir, e, ai, gama, data[i], i, inc)
+    radiacao = ci(orbita, Is, Ir, e, ai, gama, data, i, inc, beta[i])
 
     fim = datetime.now()
     var = fim - inicio
@@ -145,15 +154,15 @@ for i in tqdm(range(0, len(raan))):
         f'\n' \
         f'Anomalia verdadeira = {dados_orbita[4]} ' \
         f'\n' \
-        f'Inclinação = {dados_orbita[5]} ' \
+        f'Inclinação = {inc} ' \
         f'\n' \
         f'Numero de orbitas = {dados_orbita[6]} ' \
         f'\n' \
         f'Passo de integraçao = {dados_orbita[7]} ' \
         f'\n'
-        f'Angulo Beta: {np.degrees(beta_angle(data[i], inc, Raan[i]))}'
+        f'Angulo Beta: {beta[i]}'
         f'\n'
-        f'Data simulada de propagação: {data[i]}'
+        f'Data simulada de propagação: {input_string}'
         f'\n'
         f'Numero de Orbitas simuladas: {num_orbita}'
     )
@@ -185,32 +194,36 @@ for i in tqdm(range(0, len(raan))):
         f'\n' \
         f'Anomalia verdadeira = {dados_orbita[4]} ' \
         f'\n' \
-        f'Inclinação = {dados_orbita[5]} ' \
+        f'Inclinação = {inc} ' \
         f'\n' \
         f'Numero de orbitas = {dados_orbita[6]} ' \
         f'\n' \
         f'Passo de integraçao = {dados_orbita[7]} ' \
         f'\n'\
-        f'Angulo Beta: {np.degrees(beta_angle(data[i], inc, Raan[i]))}'\
+        f'Angulo Beta: {beta[i]}'\
         f'\n'\
-        f'Data simulada de propagação: {data[i]}'\
+        f'Data simulada de propagação: {input_string}'\
         f'\n'\
         f'Numero de Orbitas simuladas: {num_orbita}'
-    with open(f'analise_{inc}/results_{i}/log_{i}.txt', "w") as arquivo:
+    with open(f'beta{beta[i]}/analise_{inc}/results_{i}/log_{i}.txt', "w") as arquivo:
     # Escreve a mensagem no arquivo
         arquivo.write(a)
     arquivo.close()
     import plotly.io as pio
     linhas1 = calor_solar(radiacao,2)
-    pio.write_image(linhas1, f'analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/radiacao_solar_{i}.png')
+    pio.write_image(linhas1, f'beta{beta[i]}/analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/radiacao_solar_{i}.png')
 
     linhas2 = calor_albedo(radiacao, 2)
-    pio.write_image(linhas2, f'analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/radiacao_albedo_{i}.png')
+    pio.write_image(linhas2, f'beta{beta[i]}/analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/radiacao_albedo_{i}.png')
 
     linhas3 = calor_IR_Terra(radiacao, 2)
-    pio.write_image(linhas3, f'analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/radiacao_IR_Terra_{i}.png')
+    pio.write_image(linhas3, f'beta{beta[i]}/analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/radiacao_IR_Terra_{i}.png')
 
     linhas4 = calor_total(radiacao, 2)
-    pio.write_image(linhas4, f'analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/radiacao_total_{i}.png')
+    pio.write_image(linhas4, f'beta{beta[i]}/analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/radiacao_total_{i}.png')
+
+    linhas5 = soma_radiaco(radiacao, 2)
+    pio.write_image(linhas5,
+                    f'beta{beta[i]}/analise_{inc}/results_{i}/radiacao_{i}/graficos_{i}/soma_radiacao_{i}.png')
 
 

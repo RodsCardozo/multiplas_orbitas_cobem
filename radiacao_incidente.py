@@ -11,7 +11,7 @@
 
 """
 def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissividade_terra, absortividade_satelite,
-                    refletividade_terra, data,n):
+                    refletividade_terra, data, n, inclinacao, beta):
 
     """
     :param posicao_orientacao = Dataframe com a orientacao do cubesat e a sua posicao
@@ -35,7 +35,7 @@ def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissivi
                 os.makedirs(directory)
         except OSError:
             print('Error: Creating directory. ' + directory)
-    createFolder(f'./results_{n}/radiacao_{n}')
+    createFolder(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}')
     ''' Dados iniciais da orbita '''
 
     # propagador orbital
@@ -106,7 +106,7 @@ def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissivi
         Posicao_orientacao = pd.concat([Posicao_orientacao, df2], axis=1)
 
     import os.path
-    Posicao_orientacao.to_csv(os.path.join(f'./results_{n}/radiacao_{n}', f'Posicao_orientacao_{n}.csv'), sep=',')
+    Posicao_orientacao.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}', f'Posicao_orientacao_{n}.csv'), sep=',')
 
     tupla1 = list(zip(Posicao_orientacao['X_ECI'], Posicao_orientacao['Y_ECI'], Posicao_orientacao['Z_ECI']))
     vetor_posicao = [np.array(tupla) for tupla in tupla1]
@@ -174,7 +174,6 @@ def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissivi
                 Qs2.append(qs2)
             else:
                 Qs2.append(0)
-
             if k3 > 0:
                 qs3 = ai * Is * k3
                 Qs3.append(qs3)
@@ -253,12 +252,61 @@ def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissivi
 
         if PSI < np.pi/2:
 
-            d1 = np.arccos(np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A1 / np.linalg.norm(A1)))
+            '''d1 = np.arccos(np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A1 / np.linalg.norm(A1)))
             d2 = np.arccos(np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A2 / np.linalg.norm(A2)))
             d3 = np.arccos(np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A3 / np.linalg.norm(A3)))
             d4 = np.arccos(np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A4 / np.linalg.norm(A4)))
             d5 = np.arccos(np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A5 / np.linalg.norm(A5)))
-            d6 = np.arccos(np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A6 / np.linalg.norm(A6)))
+            d6 = np.arccos(np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A6 / np.linalg.norm(A6)))'''
+
+            D1 = np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A1 / np.linalg.norm(A1))
+            if D1 > 1.0:
+                d1 = np.arccos(1.0)
+            elif D1 < -1.0:
+                d1 = np.arccos(-1.0)
+            else:
+                d1 = np.arccos(D1)
+
+            D2 = np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A2 / np.linalg.norm(A2))
+            if D2 > 1.0:
+                d2 = np.arccos(1.0)
+            elif D2 < -1.0:
+                d2 = np.arccos(-1.0)
+            else:
+                d2 = np.arccos(D2)
+
+            D3 = np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A3 / np.linalg.norm(A3))
+            if D3 > 1.0:
+                d3 = np.arccos(1.0)
+            elif D3 < -1.0:
+                d3 = np.arccos(-1.0)
+            else:
+                d3 = np.arccos(D3)
+
+            D4 = np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A4 / np.linalg.norm(A4))
+            if D4 > 1.0:
+                d4 = np.arccos(1.0)
+            elif D4 < -1.0:
+                d4 = np.arccos(-1.0)
+            else:
+                d4 = np.arccos(D4)
+
+            D5 = np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A5 / np.linalg.norm(A5))
+            if D5 > 1.0:
+                d5 = np.arccos(1.0)
+            elif D5 < -1.0:
+                d5 = np.arccos(-1.0)
+            else:
+                d5 = np.arccos(D5)
+
+            D6 = np.dot(-vetor_posicao[i] / np.linalg.norm(vetor_posicao[i]), A6 / np.linalg.norm(A6))
+            if D6 > 1.0:
+                d6 = np.arccos(1.0)
+            elif D6 < -1.0:
+                d6 = np.arccos(-1.0)
+            else:
+                d6 = np.arccos(D6)
+
             VP = (np.linalg.norm(-vetor_posicao[i]))
 
             FS1 = FS(VP, d1)
@@ -433,7 +481,7 @@ def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissivi
     QT['Total 6'] = QT['Solar 6'] + QT['Albedo 6'] + QT['IR Terra 6']
 
     import os.path
-    QT.to_csv(os.path.join(f'./results_{n}/radiacao_{n}', 'Calor_Incidente.csv'), sep=',')
+    QT.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}', 'Calor_Incidente.csv'), sep=',')
     print('Fim')
 
     return QT

@@ -843,9 +843,9 @@ def lumped(calor, fg, area_rad, nos, K_m, beta):
 
 
 # multiplas orbitas analisadas para um ano com diferentes betas
-beta = [0.0]
-inc = [51.63]
-for I in range(0, len(beta)):
+beta = [0.0, 72.0]
+inc = [0.0, 51.63]
+for I in range(1, len(beta)):
 
     calor = pd.read_csv(f'beta{beta[I]}/analise_{inc[I]}/results_{I}/radiacao_{I}/Calor_Incidente.csv', sep=',')
 

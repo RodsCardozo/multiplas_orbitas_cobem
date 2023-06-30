@@ -24,8 +24,6 @@ def nome_mes(mes):
     if mes == 12:
         mes = 'Dec'
     return mes
-
-
 def posicao_sol(date):
     """
     :param date: date of interest
@@ -78,8 +76,6 @@ def posicao_sol(date):
                  r_sol * np.sin(np.radians(e)) * np.sin(np.radians(lamb_ecl))]
     vet_sol = [x * 149597870.7 for x in r_sol_vet]
     return vet_sol
-
-
 def beta_angle(date, inc, raan):
 
     import numpy as np
@@ -152,7 +148,6 @@ def beta_angle(date, inc, raan):
     beta_angle = np.arcsin(np.dot(s,n))
 
     return beta_angle
-
 def taxa_precessao(ecc, semi_eixo_maior, inc):
     import math
     mu = 398600
@@ -160,7 +155,6 @@ def taxa_precessao(ecc, semi_eixo_maior, inc):
     j2 = 0.0010826
     omega_pre = -((3 * math.sqrt(mu) * j2 * R_E**2) / (2 * (1 - ecc**2)**2 * semi_eixo_maior**(7/2))) * math.cos(math.radians(inc))
     return omega_pre
-
 def beta_raan(beta, date, inc):
     import numpy as np
     import ephem
@@ -224,80 +218,8 @@ def beta_raan(beta, date, inc):
     inc = np.radians(inc)
     from sympy import nsolve, Symbol, cos, sin, asin
     raan = Symbol('raan')
+    beta = np.radians(beta)
     eq = - beta + asin(np.dot([np.cos(np.radians(lamb_ecl)), np.sin(np.radians(lamb_ecl))*np.cos(e),
          np.sin(np.radians(lamb_ecl))*np.sin(e)], [sin(raan) * np.sin(inc), -cos(raan) * np.sin(inc), np.cos(inc)]))
 
     return nsolve(eq, 1.0)
-'''a = beta_raan(0.0, '01/01/2015 00:00:00', 80.0)
-import numpy as np
-print(f'valor de raan para que seja beta 0: {a * 180/np.pi}')'''
-
-
-if __name__ == '__main__':
-    import numpy as np
-
-    beta_iss = beta_angle('01/01/2015 00:00:00', 80.0, 96.8277534533855)
-    print(np.degrees(beta_iss))
-    import pandas as pd
-    from datetime import datetime, timedelta
-    dia_ini = '01/01/2015 00:00:00'
-    ini_date = datetime.strptime(dia_ini, "%m/%d/%Y %H:%M:%S")
-    data = [ini_date + timedelta(days=x) for x in range(0,365,30)]
-    print(data)
-    inc = 98.0
-    raan0 = 0.0
-    raan = []
-    for i in range(0, 365):
-        raan_var = raan0 + taxa_precessao(0.0, 6771.0, inc) * 24 * 60 * 60
-
-        raan.append(np.degrees(raan_var))
-        raan0 = raan_var
-
-    beta = [beta_angle(dia, inc, 0.0) for dia in data]
-    data2 = [str(dado) for dado in data]
-    df = pd.DataFrame(np.degrees(beta), columns=['Beta'])
-    df['data'] = data2
-    df['inc'] = inc
-    import plotly.express as px
-    df['mes'] = [nome_mes(dado.month) + ' ' + str(dado.day) for dado in data]
-    raan = [beta_raan(beta, data, inc)*(180/np.pi) for beta, data in zip(beta,data)]
-    df['raan'] = raan
-    fig = px.scatter(df, y="Beta", text="mes")
-    fig.update_traces(textposition="bottom left")
-    fig.show()
-
-'''from datetime import datetime, timedelta
-inicio = datetime(day=20, month=3, year=2023, hour=12, minute=0)
-dias = [inicio + timedelta(days=x) for x in range(0,365)]
-sol_dia = [posicao_sol(dia) for dia in dias]
-
-import pandas as pd
-import numpy as np
-
-lat = []
-
-for i in range(0, 365):
-
-    if np.sqrt((sol_dia[i][1] / np.linalg.norm(sol_dia[i]))**2) > 1.0:
-        lat.append(np.degrees(np.arcsin(1.0)))
-    else:
-        lat.append(np.degrees(np.arcsin(sol_dia[i][2] / np.linalg.norm(sol_dia[i]))))
-
-long = []
-for i in range(0, len(sol_dia)):
-    long.append(np.degrees(np.arctan2(sol_dia[i][1], sol_dia[i][0])))
-
-
-
-
-df = pd.DataFrame(sol_dia, columns=['x', 'y', 'z'])
-df['latitude'] = lat
-df['longitude'] = long
-df['dia'] = dias
-
-
-import plotly.express as px
-
-fig = px.line(df, x="longitude", y="latitude", text="dia")
-fig.update_traces(textposition="bottom right")
-fig.show()'''
