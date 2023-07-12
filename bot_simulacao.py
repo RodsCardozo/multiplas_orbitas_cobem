@@ -101,3 +101,31 @@ def bot_temperaturas(tempo):
         del nomes[0]
         time.sleep(10)
         keyboard.press_and_release('ctrl + w')
+
+def bot_temp_trans(tempo):
+    import pywhatkit
+    import keyboard
+    import time
+    from datetime import datetime
+
+    # contato
+    contato = '+5547992344337'
+
+    # mensagem
+    mensagem = '|----------------| ' \
+               '\n' \
+               '| Nova simulacao | ' \
+               '\n' \
+               '|----------------| ' \
+               '\n' \
+               f'Tempo de inicio: {tempo[0]} ' \
+               f'\n' \
+               f'Tempo final: {tempo[1]} ' \
+               f'\n' \
+               f'Tempo total de simulacao: {tempo[2]} ' \
+               f'\n' \
+        # mensagem
+    pywhatkit.sendwhatmsg(contato[0], mensagem, datetime.now().hour, datetime.now().minute + 2)
+    time.sleep(10)
+    keyboard.press_and_release('ctrl + w')
+

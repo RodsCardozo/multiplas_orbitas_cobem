@@ -9,12 +9,12 @@ from datetime import datetime, timedelta
 # variacao do mes
 data = '01/01/2023 00:00:00'
 data_inicio = datetime.strptime(data, '%m/%d/%Y %H:%M:%S')
-meses = [data_inicio + timedelta(days=x) for x in range(0,365,30)]
+meses = [data_inicio + timedelta(days=x) for x in range(0, 365, 1)]
 Meses = [nome_mes(mes.month) for mes in meses]
 
 # inclinacao da orbita [graus]
 
-inclinacao = 98
+inclinacao = 51.63
 
 # taxa de precessao mensal [graus/s]
 
@@ -28,25 +28,26 @@ Raan_mes = []
 
 Raan_mes.append(Raan0)
 
-for i in range(1,13):
-    a = Raan_mes[i-1] + omega_p * (23*3600 + 56*60 + 4)*30
+for i in range(1,365):
+    a = Raan_mes[i-1] + omega_p * (23*3600 + 56*60 + 4)
     Raan_mes.append(a)
 
 # calculo do beta anual
 
-beta = [beta_angle(dia, inclinacao, 0.0)*(180/np.pi) for dia in (meses)]
+beta = [beta_angle(dia, inclinacao, raan)*(180/np.pi) for dia,raan in zip(meses, Raan_mes)]
 
 # plotagem do beta mensal
 
 df = pd.DataFrame()
 df['Beta'] = beta
-df['Date'] = Meses
+df['Date'] = meses
 df['temp_color'] = np.arange(len(df))
-
+df['Raan'] = (Raan_mes)
 df['Month'] = [f'{nome_mes(int(mes.month))}' + ' ' + f'{mes.day}' for mes in meses]
+df.to_csv('beta_mes.csv', sep=',', index=False)
 import plotly.express as px
-fig = px.line(df, y="Beta", text="Month", color_discrete_sequence=['#3CB371'])
-fig.update_traces(textposition="bottom left")
+fig = px.line(df, y="Beta", color_discrete_sequence=['#3CB371'])
+#fig.update_traces(textposition="bottom left")
 fig.update_layout(showlegend=True,
                   legend=dict(bgcolor='rgb(250, 250, 250)',
                                  bordercolor='rgb(120, 120, 120)',
@@ -58,14 +59,17 @@ fig.update_layout(showlegend=True,
                          showgrid=True,
                          gridcolor='rgba(100, 100, 100, 0.5)',
                          gridwidth=1,
-                         dtick=1,
+                         title_font=dict(size=24),
+                         tickfont=dict(size=16),
+
                      griddash='dot'
                      ),
                      yaxis=dict(
                          showgrid=True,
                          gridcolor='rgba(100, 100, 100, 0.5)',
                          gridwidth=1,
-                         dtick=20,
+                         title_font=dict(size=24),
+                         tickfont=dict(size=16),
                      griddash='dot'
                      ),
                      autosize=True,

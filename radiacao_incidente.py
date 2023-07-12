@@ -29,13 +29,13 @@ def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissivi
     import pandas as pd
     import os, sys
 
-    def createFolder(directory):
+    '''def createFolder(directory):
         try:
             if not os.path.exists(directory):
                 os.makedirs(directory)
         except OSError:
             print('Error: Creating directory. ' + directory)
-    createFolder(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}')
+    createFolder(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}')'''
     ''' Dados iniciais da orbita '''
 
     # propagador orbital
@@ -105,8 +105,8 @@ def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissivi
         R = []
         Posicao_orientacao = pd.concat([Posicao_orientacao, df2], axis=1)
 
-    import os.path
-    Posicao_orientacao.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}', f'Posicao_orientacao_{n}.csv'), sep=',')
+    '''import os.path
+    Posicao_orientacao.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}', f'Posicao_orientacao_{n}.csv'), sep=',')'''
 
     tupla1 = list(zip(Posicao_orientacao['X_ECI'], Posicao_orientacao['Y_ECI'], Posicao_orientacao['Z_ECI']))
     vetor_posicao = [np.array(tupla) for tupla in tupla1]
@@ -481,7 +481,7 @@ def calor_incidente(posicao_orientacao, radiacao_solar, radiacao_terra, emissivi
     QT['Total 6'] = QT['Solar 6'] + QT['Albedo 6'] + QT['IR Terra 6']
 
     import os.path
-    QT.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}', 'Calor_Incidente.csv'), sep=',')
+    #QT.to_csv(os.path.join(f'beta{beta}/analise_{inclinacao}/results_{n}/radiacao_{n}', 'Calor_Incidente.csv'), sep=',')
     print('Fim')
 
     return QT

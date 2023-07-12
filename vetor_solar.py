@@ -223,3 +223,4 @@ def beta_raan(beta, date, inc):
          np.sin(np.radians(lamb_ecl))*np.sin(e)], [sin(raan) * np.sin(inc), -cos(raan) * np.sin(inc), np.cos(inc)]))
 
     return nsolve(eq, 1.0)
+

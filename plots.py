@@ -290,9 +290,13 @@ def calor_solar(dataframe, plot):
         paper_bgcolor='white',  # Cor de fundo do papel
         xaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
         yaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
     )
     linhas.update_layout(
@@ -313,6 +317,10 @@ def calor_solar(dataframe, plot):
         yaxis=dict(
             linewidth=2,  # Espessura da borda do eixo y
         ),
+    )
+    linhas.update_layout(
+        height=600,  # Altura da figura em pixels
+        width=800,  # Largura da figura em pixels
     )
     if plot == 1:
         linhas.show()
@@ -355,9 +363,13 @@ def calor_albedo(dataframe,plot):
         paper_bgcolor='white',  # Cor de fundo do papel
         xaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
         yaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
     )
     linhas.update_layout(
@@ -378,6 +390,10 @@ def calor_albedo(dataframe,plot):
         yaxis=dict(
             linewidth=2,  # Espessura da borda do eixo y
         ),
+    )
+    linhas.update_layout(
+        height=600,  # Altura da figura em pixels
+        width=800,  # Largura da figura em pixels
     )
     if plot == 1:
         linhas.show()
@@ -421,9 +437,13 @@ def calor_IR_Terra(dataframe,plot):
         paper_bgcolor='white',  # Cor de fundo do papel
         xaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
         yaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
     )
     linhas.update_layout(
@@ -444,6 +464,10 @@ def calor_IR_Terra(dataframe,plot):
         yaxis=dict(
             linewidth=2,  # Espessura da borda do eixo y
         ),
+    )
+    linhas.update_layout(
+        height=600,  # Altura da figura em pixels
+        width=800,  # Largura da figura em pixels
     )
     if plot == 1:
         linhas.show()
@@ -487,9 +511,13 @@ def calor_total(dataframe, plot):
         paper_bgcolor='white',  # Cor de fundo do papel
         xaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
         yaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
     )
     linhas.update_layout(
@@ -510,6 +538,10 @@ def calor_total(dataframe, plot):
         yaxis=dict(
             linewidth=2,  # Espessura da borda do eixo y
         ),
+    )
+    linhas.update_layout(
+        height=600,  # Altura da figura em pixels
+        width=800,  # Largura da figura em pixels
     )
     if plot == 1:
         linhas.show()
@@ -554,9 +586,13 @@ def soma_radiaco(dataframe, plot):
         paper_bgcolor='white',  # Cor de fundo do papel
         xaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo x
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
         yaxis=dict(
             linecolor='rgb(190, 190, 190)',  # Cor da borda do eixo y
+            title_font=dict(size=18),
+            tickfont=dict(size=16)
         ),
     )
     linhas.update_layout(
@@ -577,6 +613,10 @@ def soma_radiaco(dataframe, plot):
         yaxis=dict(
             linewidth=2,  # Espessura da borda do eixo y
         ),
+    )
+    linhas.update_layout(
+        height=600,  # Altura da figura em pixels
+        width=800,  # Largura da figura em pixels
     )
     if plot == 1:
         linhas.show()
